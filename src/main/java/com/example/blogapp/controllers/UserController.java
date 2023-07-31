@@ -5,10 +5,10 @@ import com.example.blogapp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -21,5 +21,30 @@ public class UserController {
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
         UserDto createdUser = this.userService.createUser(userDto);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/users/{userId}")
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto, @PathVariable Integer userId) {
+        System.out.println("userId" + userId);
+        UserDto updatedUser = this.userService.updateUser(userDto, userId);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable Integer userId) {
+        this.userService.deleteUser(userId);
+        return ResponseEntity.ok(Map.of("message", "User Deleted Successfully"));
+    }
+
+    @GetMapping("/users")
+    public List<UserDto> getAllUser() {
+        List<UserDto> userList = this.userService.getAllUsers();
+        return userList;
+    }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<UserDto> getUserById(@PathVariable Integer userId) {
+        UserDto user = this.userService.getUserById(userId);
+        return ResponseEntity.ok(user);
     }
 }
